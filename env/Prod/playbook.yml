@@ -1,0 +1,31 @@
+- hosts: terraform-ansible
+  tasks:
+    - name: Installing Python3, Virtualenv
+      apt:
+        pkg:
+        - python3
+        - virtualenv
+        update_cache: yes
+      become: yes
+    - name: Git Clone
+      ansible.builtin.git:
+        repo: https://github.com/alura-cursos/clientes-leo-api.git
+        dest: /home/ubuntu/app
+        version: master
+        force: yes
+    - name: Installing dependencies with pip (Django and Django Rest)
+      pip:
+        virtualenv: /home/ubuntu/app/venv
+        requirements: /home/ubuntu/app/requirements.txt
+    - name: Changing settings hosts file
+      lineinfile: 
+        path: /home/ubuntu/app/setup/settings.py
+        regexp: 'ALLOWED_HOSTS'
+        line: 'ALLOWED_HOSTS = ["*"]'
+        backrefs: yes
+    - name: configuring database
+      shell: '. /home/ubuntu/app/venv/bin/activate; python /home/ubuntu/app/manage.py migrate'
+    - name: loading data
+      shell: '. /home/ubuntu/app/venv/bin/activate; python /home/ubuntu/app/manage.py loaddata clientes.json'
+    - name: starting server
+      shell: '. /home/ubuntu/app/venv/bin/activate; nohup python /home/ubuntu/app/manage.py runserver 0.0.0.0:8000 &'
