@@ -37,7 +37,7 @@ This project was developed with the following technologies:
 
 ## 💻 Project
 
-The ideia of this project is create an infrastruture using Terraform and ansible and then provide and automate this proccess creating an enviroment
+The ideia of this project is create an Infrastructure as Code (IaC) using Terraform and ansible and then provide and automate this proccess creating an enviroment
 for Development and Production. 
 Finalling deploy a complete application on Production Server.
 
